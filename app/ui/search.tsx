@@ -12,7 +12,7 @@ export default function Search({ placeholder }: { placeholder: string }) { // us
     const params = new URLSearchParams(searchParams);
     term ? params.set("query", term) : params.delete("query");
     replace(`${pathname}?${params.toString()}`);
-    console.log(searchParams);
+    // console.log(searchParams);
   }
   return (
     <div className="relative flex flex-1 flex-shrink-0">
