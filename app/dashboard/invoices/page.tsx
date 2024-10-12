@@ -7,34 +7,61 @@ import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
 import { fetchInvoicesPages } from "@/app/lib/data";
 
+import Form from "@/app/ui/invoices/create-form";
+import Breadcrumbs from "@/app/ui/invoices/breadcrumbs";
+import { fetchCustomers } from "@/app/lib/data";
+
 interface SearchParams {
   query?: string;
   page?: string;
 }
-export default async function Page({
-  searchParams, // built in property
-}: {
-  searchParams?: SearchParams;
-}) {
-  const query = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = await fetchInvoicesPages(query);
-  return (
-    <div className="w-full">
-      <div className="flex w-full items-center justify-between ">
-        <h1 className={`${lusitana.className} text-2xl`}>Invoices</h1>
-      </div>
 
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Search Invoices..." />
-        <CreateInvoice />
-      </div>
-      <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
-        <Table query={query} currentPage={currentPage} />{" "}
-      </Suspense>
-      <div className="mt-5 flex w-full justify-center">
-        <Pagination totalPages={totalPages} />
-      </div>
-    </div>
+export default async function Page() {
+  const customers = await fetchCustomers();
+
+  return (
+    <main>
+      <Breadcrumbs
+        breadcrumbs={[
+          { label: "Invoices", href: "/dashboard/invoices" },
+          {
+            label: "Create Invoice",
+            href: "/dashboard/invoices/create",
+            active: true,
+          },
+        ]}
+      />
+
+      <Form customers={customers} />
+    </main>
   );
 }
+
+// export default async function Page({
+//   searchParams, // built in property
+// }: {
+//   searchParams?: SearchParams;
+// }) {
+//   const query = searchParams?.query || "";
+//   const currentPage = Number(searchParams?.page) || 1;
+//   const totalPages = await fetchInvoicesPages(query);
+
+//   return (
+//     <div className="w-full">
+//       <div className="flex w-full items-center justify-between ">
+//         <h1 className={`${lusitana.className} text-2xl`}>Invoices</h1>
+//       </div>
+
+//       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+//         <Search placeholder="Search Invoices..." />
+//         <CreateInvoice />
+//       </div>
+//       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
+//         <Table query={query} currentPage={currentPage} />{" "}
+//       </Suspense>
+//       <div className="mt-5 flex w-full justify-center">
+//         <Pagination totalPages={totalPages} />
+//       </div>
+//     </div>
+//   );
+// }
